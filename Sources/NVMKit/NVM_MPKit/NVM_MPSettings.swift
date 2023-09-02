@@ -340,15 +340,15 @@ fileprivate struct SettingsRow: View {
 
 public struct NVM_MPSettingsLink: Identifiable {
     
-    let destination: NVMSettingsDestination
-    let text: String
-    let systemImage: String?
-    let image: Image?
-    let view: (any View)?
+    internal let destination: NVMSettingsDestination
+    internal let text: String
+    internal let systemImage: String?
+    internal let image: Image?
+    internal let view: (any View)?
     
-    let tint: Color?
-    let section: SettingsSection
-    let frame: NVM_MPFrame?
+    internal let tint: Color?
+    public let section: SettingsSection
+    internal let frame: NVM_MPFrame?
     
     public let id: String
     
