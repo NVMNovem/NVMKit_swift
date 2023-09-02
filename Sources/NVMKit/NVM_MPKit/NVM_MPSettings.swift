@@ -9,7 +9,7 @@ import SwiftUI
 
 
 // MARK: - NVM_MPSettings
-public struct NVM_MPSettings<Footer: View>: View {
+public struct NVM_MPSettings: View {
     private let settingLinks: [NVM_MPSettingsLink]
     
     private let accent: Color
@@ -17,7 +17,7 @@ public struct NVM_MPSettings<Footer: View>: View {
     private let title: String
     private let project: String
     
-    private let footer: Footer?
+    private let footer: (any View)?
     
     private let sectionizedSettingLinks: Array<(key: SettingsSection, value: Array<NVM_MPSettingsLink>)>
     private let sectionizedSettingLinksDict: [SettingsSection : [NVM_MPSettingsLink]]
@@ -32,8 +32,25 @@ public struct NVM_MPSettings<Footer: View>: View {
                 accent: Color,
                 color: Bool = true,
                 title: String = "Settings",
+                project: String) {
+        self.settingLinks = settingLinks
+        self.accent = accent
+        self.color = color
+        self.title = title
+        self.project = project
+        self.footer = nil
+        
+        self.sectionizedSettingLinks = sectionized(settingLinks)
+        self.sectionizedSettingLinksDict = Dictionary(uniqueKeysWithValues: sectionizedSettingLinks)
+        self.settingSections = settingsSections(from: sectionizedSettingLinks)
+    }
+    
+    public init(settingLinks: [NVM_MPSettingsLink],
+                accent: Color,
+                color: Bool = true,
+                title: String = "Settings",
                 project: String,
-                footer: Footer? = nil) {
+                footer: any View) {
         self.settingLinks = settingLinks
         self.accent = accent
         self.color = color
@@ -91,7 +108,11 @@ public struct NVM_MPSettings<Footer: View>: View {
                                               selection: $selection)
                     }
                     if let footer {
-                        footer
+                        Section {
+                            EmptyView()
+                        } footer: {
+                            AnyView(footer)
+                        }
                     }
                 }
                 .navigationDestination(for: NVM_MPSettingsLink.self) { settingLink in
@@ -112,7 +133,11 @@ public struct NVM_MPSettings<Footer: View>: View {
                                               selection: $selection)
                     }
                     if let footer {
-                        footer
+                        Section {
+                            EmptyView()
+                        } footer: {
+                            AnyView(footer)
+                        }
                     }
                 }
                 .nvm_mpNavigationTitle(title)
@@ -503,7 +528,7 @@ public struct SettingsSection: Hashable, Identifiable {
         self.type = .empty
     }
     
-    public init(type: SectionType) {
+    public init(_ type: SectionType) {
         self.type = type
         self.custom = nil
     }
@@ -583,7 +608,7 @@ public extension Button {
     }
 }
 
-/*
+
 struct NVM_MPSettingsPreviews : PreviewProvider {
     
     static var previews: some View {
@@ -592,7 +617,7 @@ struct NVM_MPSettingsPreviews : PreviewProvider {
                                text: "Selections",
                                systemImage: "checkmark.rectangle.portrait.fill",
                                tint: .accentColor,
-                               section: SettingsSection(type: .General)),
+                               section: SettingsSection(.General)),
             NVM_MPSettingsLink(NVMSettingsDestination(destination: Text("Test")),
                                text: "Test label",
                                systemImage: "arkit",
@@ -606,10 +631,28 @@ struct NVM_MPSettingsPreviews : PreviewProvider {
                                text: "Geavanceerd",
                                systemImage: "gear",
                                tint: .gray,
-                               section: SettingsSection(type: .Advanced))
+                               section: SettingsSection(.Advanced))
         ]
         
-        NVM_MPSettings(settingLinks: settingsLinks, nvmAuthentication: ObservedObject(initialValue: NVMAuthentication()), accent: .accentColor, color: true)
+        NVM_MPSettings(settingLinks: settingsLinks,
+                       accent: .accentColor,
+                       color: true,
+                       project: "Test",
+                       footer: (
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Image(systemName: "flag.checkered.2.crossed")
+                                    .font(.system(size: 25))
+                                    .padding(.bottom, 3)
+                                Text("Novem - Software")
+                                    .padding(.bottom, 30)
+                                Text("Version 1.0.0")
+                                Text("Build 002")
+                            }
+                            Spacer()
+                        }
+                       ))
     }
 }
-*/
+
