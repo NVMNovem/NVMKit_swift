@@ -41,16 +41,19 @@ public struct NVM_MPToolbarButton: ToolbarContent {
                         action()
                     }
                     .disabled(disabled)
+                    .opacity(disabled ? 0.5 : 1)
                 case .save:
                     Button("Save") {
                         action()
                     }
                     .disabled(disabled)
+                    .opacity(disabled ? 0.5 : 1)
                 case .text(let textName):
                     Button(textName) {
                         action()
                     }
                     .disabled(disabled)
+                    .opacity(disabled ? 0.5 : 1)
                 default:
                     Button {
                         action()
@@ -62,6 +65,7 @@ public struct NVM_MPToolbarButton: ToolbarContent {
                         }
                     }
                     .disabled(disabled)
+                    .opacity(disabled ? 0.5 : 1)
                 }
             }
         }
