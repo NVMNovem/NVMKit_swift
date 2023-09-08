@@ -195,7 +195,7 @@ public extension View {
                      idealHeight: CGFloat? = nil,
                      maxHeight: CGFloat? = nil,
                      
-                     platforms: [NVMOSPlatform]) -> some View {
+                     platforms: NVMOSPlatform...) -> some View {
         self.modifier(NVM_MPFrameModifier(minWidth: minWidth,
                                           idealWidth: idealWidth,
                                           maxWidth: maxWidth,
@@ -206,7 +206,7 @@ public extension View {
                                           platforms: platforms))
     }
     
-    func nvm_mpFrame(_ frame: NVM_MPFrame, platforms: [NVMOSPlatform]) -> some View {
+    func nvm_mpFrame(_ frame: NVM_MPFrame, platforms: NVMOSPlatform...) -> some View {
         self.modifier(NVM_MPFrameModifier(minWidth: frame.minWidth,
                                           idealWidth: frame.idealWidth,
                                           maxWidth: frame.maxWidth,
@@ -225,7 +225,7 @@ public extension View {
                      idealHeight: CGFloat? = nil,
                      maxHeight: CGFloat? = nil,
                      
-                     skip platforms: [NVMOSPlatform]) -> some View {
+                     skip platforms: NVMOSPlatform...) -> some View {
         self.modifier(NVM_MPFrameModifier(minWidth: minWidth,
                                           idealWidth: idealWidth,
                                           maxWidth: maxWidth,
@@ -236,7 +236,7 @@ public extension View {
                                           skip: platforms))
     }
     
-    func nvm_mpFrame(_ frame: NVM_MPFrame, skip platforms: [NVMOSPlatform]) -> some View {
+    func nvm_mpFrame(_ frame: NVM_MPFrame, skip platforms: NVMOSPlatform...) -> some View {
         self.modifier(NVM_MPFrameModifier(minWidth: frame.minWidth,
                                           idealWidth: frame.idealWidth,
                                           maxWidth: frame.maxWidth,

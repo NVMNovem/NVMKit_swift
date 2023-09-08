@@ -13,6 +13,7 @@ public struct NVM_MPToolbarButton: ToolbarContent {
     private let renderingMode: SymbolRenderingMode?
     private let placement: ToolbarItemPlacement
     private let visible: Bool
+    private let disabled: Bool
     private let action: (() -> Void)
     
     public init(_ type: ButtonType,
@@ -20,12 +21,14 @@ public struct NVM_MPToolbarButton: ToolbarContent {
                 renderingMode: SymbolRenderingMode? = nil,
                 placement: ToolbarItemPlacement = .automatic,
                 visible: Bool = true,
+                disabled: Bool = false,
                 action: @escaping (() -> Void)) {
         self.type = type
         self.color = color
         self.renderingMode = renderingMode
-        self.visible = visible
         self.placement = placement
+        self.visible = visible
+        self.disabled = disabled
         self.action = action
     }
     
@@ -37,14 +40,17 @@ public struct NVM_MPToolbarButton: ToolbarContent {
                     Button("Done") {
                         action()
                     }
+                    .disabled(disabled)
                 case .save:
                     Button("Save") {
                         action()
                     }
+                    .disabled(disabled)
                 case .text(let textName):
                     Button(textName) {
                         action()
                     }
+                    .disabled(disabled)
                 default:
                     Button {
                         action()
@@ -55,6 +61,7 @@ public struct NVM_MPToolbarButton: ToolbarContent {
                                 .symbolRenderingMode(buttonRenderingMode)
                         }
                     }
+                    .disabled(disabled)
                 }
             }
         }
