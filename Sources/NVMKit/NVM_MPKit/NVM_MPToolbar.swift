@@ -14,6 +14,8 @@ public struct NVM_MPToolbarButton: ToolbarContent {
     private let placement: ToolbarItemPlacement
     private let visible: Bool
     private let disabled: Bool
+    private let keyEquivalent: KeyEquivalent?
+    private let modifiers: EventModifiers?
     private let action: (() -> Void)
     
     public init(_ type: ButtonType,
@@ -22,6 +24,8 @@ public struct NVM_MPToolbarButton: ToolbarContent {
                 placement: ToolbarItemPlacement = .automatic,
                 visible: Bool = true,
                 disabled: Bool = false,
+                shortcut keyEquivalent: KeyEquivalent? = nil,
+                modifiers: EventModifiers? = nil,
                 action: @escaping (() -> Void)) {
         self.type = type
         self.color = color
@@ -29,6 +33,8 @@ public struct NVM_MPToolbarButton: ToolbarContent {
         self.placement = placement
         self.visible = visible
         self.disabled = disabled
+        self.keyEquivalent = keyEquivalent
+        self.modifiers = modifiers
         self.action = action
     }
     
@@ -37,37 +43,58 @@ public struct NVM_MPToolbarButton: ToolbarContent {
             if visible {
                 switch type {
                 case .done:
-                    Button("Done") {
-                        action()
-                    }
-                    .disabled(disabled)
-                    .opacity(disabled ? 0.5 : 1)
+                    buttonView(withTitle: "Done")
                 case .save:
-                    Button("Save") {
-                        action()
-                    }
-                    .disabled(disabled)
-                    .opacity(disabled ? 0.5 : 1)
+                    buttonView(withTitle: "Save")
                 case .text(let textName):
-                    Button(textName) {
-                        action()
-                    }
-                    .disabled(disabled)
-                    .opacity(disabled ? 0.5 : 1)
+                    buttonView(withTitle: textName)
                 default:
-                    Button {
-                        action()
-                    } label: {
-                        if let systemImage = type.systemImage {
-                            Image(systemName: systemImage)
-                                .foregroundColor(buttonColor)
-                                .symbolRenderingMode(buttonRenderingMode)
+                    if let keyEquivalent {
+                        Button {
+                            action()
+                        } label: {
+                            if let systemImage = type.systemImage {
+                                Image(systemName: systemImage)
+                                    .foregroundColor(buttonColor)
+                                    .symbolRenderingMode(buttonRenderingMode)
+                            }
                         }
+                        .disabled(disabled)
+                        .opacity(disabled ? 0.5 : 1)
+                        .keyboardShortcut(keyEquivalent, modifiers: modifiers ?? [])
+                    } else {
+                        Button {
+                            action()
+                        } label: {
+                            if let systemImage = type.systemImage {
+                                Image(systemName: systemImage)
+                                    .foregroundColor(buttonColor)
+                                    .symbolRenderingMode(buttonRenderingMode)
+                            }
+                        }
+                        .disabled(disabled)
+                        .opacity(disabled ? 0.5 : 1)
                     }
-                    .disabled(disabled)
-                    .opacity(disabled ? 0.5 : 1)
                 }
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func buttonView(withTitle title: String) -> some View {
+        if let keyEquivalent {
+            Button(title) {
+                action()
+            }
+            .disabled(disabled)
+            .opacity(disabled ? 0.5 : 1)
+            .keyboardShortcut(keyEquivalent, modifiers: modifiers ?? [])
+        } else {
+            Button(title) {
+                action()
+            }
+            .disabled(disabled)
+            .opacity(disabled ? 0.5 : 1)
         }
     }
     
